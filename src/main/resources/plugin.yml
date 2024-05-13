@@ -1,0 +1,24 @@
+name: Scaleshifter
+version: '${version}'
+main: net.hynse.scaleshifter.Scaleshifter
+api-version: '1.20'
+folia-supported: true
+commands:
+  scaleplayer:
+    description: Set the scale of a player.
+    usage: /scaleplayer <playername> <value>
+    permission: scaleshifter.scaleplayer
+
+  scale:
+    description: Set your own scale.
+    usage: /scale <value>
+    permission: scaleshifter.scale
+
+permissions:
+  scaleshifter.scaleplayer:
+    description: Allows a player to set the scale of another player.
+    default: op
+
+  scaleshifter.scale:
+    description: Allows a player to set their own scale.
+    default: op
