@@ -23,6 +23,7 @@ public class GUI implements Listener {
     public final int CustomModelDataNormal = 69004;
     public final int CustomModelDataLarge = 69005;
     public final int CustomModelDataMassive = 69006;
+    public Double[] data = null;
 
     static {
         SCALE_DATA.put("Tiny", new Double[]{0.42, 0.135, 16.0, 4.7, 0.95, 1.36, 0.058, 0.35, -0.16, 2.8, 0.05, 0.97, 4.0, 4.0});
@@ -39,9 +40,8 @@ public class GUI implements Listener {
         // Only proceed if the event is not a bottom inventory click
 
         Player player = (Player) event.getWhoClicked();
-
         if (event.getView().getTitle().equals(GUI_TITLE)) {
-            event.setCancelled(true);
+            event.setCancelled(true); //BRO what the Hel!
 
 
             ItemStack item = event.getCurrentItem();
@@ -57,7 +57,7 @@ public class GUI implements Listener {
             }
 
             int customModelData = meta.getCustomModelData();
-            Double[] data = null;
+
 
             switch (customModelData) {
                 case CustomModelDataTiny -> data = SCALE_DATA.get("Tiny");
@@ -76,75 +76,13 @@ public class GUI implements Listener {
             if (playerScale == data[0]) {
                 player.sendMessage(ChatColor.RED + "You are already " + ChatColor.stripColor(meta.getDisplayName()));
             } else {
-
+                player.updateInventory();
+                FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (o) -> {
                 setPlayerStatus(player, data);
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
                 player.closeInventory();
-            }
-        }
-    }
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onInventoryOpen(InventoryOpenEvent event) {
-        Player player = (Player) event.getPlayer();
-
-        if (!event.getView().getTitle().equals(GUI_TITLE)) {
-            // Check the player's cursor
-            ItemStack currentItem = player.getItemOnCursor();
-            deleteItemIfMatchesCriteria(currentItem);
-
-            // Check the player's inventory
-            for (ItemStack item : player.getInventory().getContents()) {
-                deleteItemIfMatchesCriteria(item);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onItemDrop(PlayerDropItemEvent event) {
-        Player player = event.getPlayer();
-        ItemStack droppedItem = event.getItemDrop().getItemStack();
-
-        // Check if the dropped item is in the GUI inventory
-        if (!event.getItemDrop().getLocation().equals(player.getLocation())) {
-            deleteItemIfMatchesCriteria(droppedItem);
-        }
-    }
-
-
-    private void deleteItemIfMatchesCriteria(ItemStack item) {
-        if (item != null && item.hasItemMeta()) {
-            ItemMeta meta = item.getItemMeta();
-            if (meta != null && meta.hasCustomModelData()) {
-                switch (item.getType()) {
-                    case COPPER_INGOT:
-                        if (meta.getCustomModelData() == CustomModelDataTiny) {
-                            item.setAmount(0);
-                        }
-                        break;
-                    case IRON_INGOT:
-                        if (meta.getCustomModelData() == CustomModelDataSmall) {
-                            item.setAmount(0);
-                        }
-                        break;
-                    case GOLD_INGOT:
-                        if (meta.getCustomModelData() == CustomModelDataNormal) {
-                            item.setAmount(0);
-                        }
-                        break;
-                    case DIAMOND:
-                        if (meta.getCustomModelData() == CustomModelDataLarge) {
-                            item.setAmount(0);
-                        }
-                        break;
-                    case NETHERITE_INGOT:
-                        if (meta.getCustomModelData() == CustomModelDataMassive) {
-                            item.setAmount(0);
-                        }
-                        break;
-                    default:
-                        break;
+                    }, 2);
                 }
-            }
         }
     }
 
