@@ -193,7 +193,7 @@ public class GUI implements Listener {
         ItemStack emptyItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta emptyMeta = emptyItem.getItemMeta();
         if (emptyMeta != null) {
-            emptyMeta.setDisplayName("");
+            emptyMeta.setDisplayName(" ");
             emptyItem.setItemMeta(emptyMeta);
         }
         gui.setItem(5, emptyItem);
