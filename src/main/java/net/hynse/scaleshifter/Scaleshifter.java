@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listener, CommandExecutor {
     public static Scaleshifter instance;
-    public static DataManagers dataManagers;
+    public DataManagers dataManagers;
     public static GUI gui;
     public static ScaleUtil scaleUtil;
     private PlayerHitbox hitbox;
@@ -40,7 +40,7 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
 
         getLogger().info("Scaleshifter enabled");
         register();
-        dataManagers.setupDatabase();
+        dataManagers.datasetup();
 
 
         // Schedule a task to check player intersection with hitbox

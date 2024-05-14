@@ -110,12 +110,12 @@ public class GUI implements Listener {
                             5.5,
                             5.5);
                 }
-                Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
 //                getLogger().info("Player " + player.getName() + " clicked in inventory. Interaction status updated.");
                 player.closeInventory();
             }
         }
     }
+
     public void setPlayerStatus(Player player, Double scale, Double speed, Double maxhealth, Double attackspeed, Double attackdamage, Double falldamangemultiple, Double gravity, Double jumpstrength, Double knockbackresitance, Double safefalldistance, Double stepheight, Double blockbreakspeed, Double blockinteractionrange, Double entityinteractionrange) {
         Scaleshifter.scaleUtil.setPlayerScale(player, scale);
         FoliaScheduler.getRegionScheduler().runDelayed(Scaleshifter.instance, player.getLocation(), (o) -> {
@@ -132,7 +132,8 @@ public class GUI implements Listener {
             player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED).setBaseValue(blockbreakspeed);
             player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE).setBaseValue(blockinteractionrange);
             player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE).setBaseValue(entityinteractionrange);
-            },10);
+            Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
+        }, 10);
 //        getLogger().info("Setting status" + player
 //                + "To (Speed: " + speed
 //                + ", Max Health: " + maxhealth
@@ -206,11 +207,13 @@ public class GUI implements Listener {
         player.openInventory(gui);
 //        getLogger().info("Opening GUI for player " + player.getName());
     }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
-        if (event.getView().getTitle().equals("Choose Your Scale") && !Scaleshifter.instance.playerInteractions.containsKey(player.getUniqueId()) || !Scaleshifter.instance.playerInteractions.get(player.getUniqueId()))  {
-        openGUI(player);
-        }
+        FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (u) -> {
+            if (event.getView().getTitle().equals("Choose Your Scale") && !Scaleshifter.instance.playerInteractions.containsKey(player.getUniqueId()) || !Scaleshifter.instance.playerInteractions.get(player.getUniqueId()))
+                openGUI(player);
+        },10);
     }
 }

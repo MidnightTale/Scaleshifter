@@ -3,68 +3,57 @@ package net.hynse.scaleshifter;
 import net.hynse.scaleshifter.Scaleshifter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.UUID;
 
+import static org.bukkit.Bukkit.getLogger;
+
 public class DataManagers {
-    private Connection connection;
+    public File dataFile;
 
-    public void setupDatabase() {
-        try {
-            // Ensure that the directory for the data file exists
-            File dataFolder = Scaleshifter.instance.getDataFolder();
-            if (!dataFolder.exists()) {
-                dataFolder.mkdirs();
-            }
-
-            // Connect to the SQLite database (if it doesn't exist, it will be created)
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder.getAbsolutePath() + "/data.db");
-            // Create a table to store player interactions
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS player_interactions (uuid VARCHAR(36) PRIMARY KEY, interacted BOOLEAN)");
-            statement.close();
-            Bukkit.getLogger().info("SQLite database connected successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void datasetup() {
+        dataFile = new File(Scaleshifter.instance.getDataFolder(), "player_interactions.json");
+        if (!dataFile.exists()) {
+            saveInteractions();
+        } else {
+            loadInteractions();
         }
-    }
 
+    }
     public void saveInteractions() {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO player_interactions (uuid, interacted) VALUES (?, ?) ON CONFLICT(uuid) DO UPDATE SET interacted = ?");
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                preparedStatement.setString(1, player.getUniqueId().toString());
-                preparedStatement.setBoolean(2, Scaleshifter.instance.playerInteractions.getOrDefault(player.getUniqueId(), false));
-                preparedStatement.setBoolean(3, Scaleshifter.instance.playerInteractions.getOrDefault(player.getUniqueId(), false));
-                preparedStatement.executeUpdate();
-            }
-            preparedStatement.close();
-            Bukkit.getLogger().info("Player interactions saved to SQLite database.");
-        } catch (SQLException e) {
+        JSONObject jsonObject = new JSONObject();
+        for (UUID uuid : Scaleshifter.instance.playerInteractions.keySet()) {
+            jsonObject.put(uuid.toString(), Scaleshifter.instance.playerInteractions.get(uuid));
+        }
+        try (FileWriter fileWriter = new FileWriter(dataFile)) {
+            fileWriter.write(jsonObject.toJSONString());
+            getLogger().info("Player interactions saved to file.");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void loadInteractions() {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM player_interactions");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String uuid = resultSet.getString("uuid");
-                boolean interacted = resultSet.getBoolean("interacted");
-                Scaleshifter.instance.playerInteractions.put(UUID.fromString(uuid), interacted);
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader fileReader = new FileReader(dataFile)) {
+            Object obj = jsonParser.parse(fileReader);
+            JSONObject jsonObject = (JSONObject) obj;
+            for (Object key : jsonObject.keySet()) {
+                UUID uuid = UUID.fromString((String) key);
+                boolean interacted = (boolean) jsonObject.get(key);
+                Scaleshifter.instance.playerInteractions.put(uuid, interacted);
             }
-            resultSet.close();
-            preparedStatement.close();
-            Bukkit.getLogger().info("Player interactions loaded from SQLite database.");
-        } catch (SQLException e) {
+            getLogger().info("Player interactions loaded from file.");
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    public void saveDefaultInteractions() {
-        saveInteractions();
     }
 }
