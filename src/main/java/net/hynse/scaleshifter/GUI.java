@@ -190,7 +190,7 @@ public class GUI implements Listener {
         }
         gui.setItem(4, bigScaleItem);
 
-        ItemStack emptyItem = new ItemStack(Material.GRAY_STAINED_GLASS);
+        ItemStack emptyItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta emptyMeta = emptyItem.getItemMeta();
         if (emptyMeta != null) {
             emptyMeta.setDisplayName("");
