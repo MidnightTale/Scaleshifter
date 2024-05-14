@@ -1,8 +1,5 @@
 package net.hynse.scaleshifter;
 
-import net.hynse.scaleshifter.Scaleshifter;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,7 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.*;
 import java.util.UUID;
 
 import static org.bukkit.Bukkit.getLogger;
