@@ -14,9 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class GUI implements Listener {
     private static final Map<String, Double[]> SCALE_DATA = new LinkedHashMap<>();
@@ -31,31 +29,36 @@ public class GUI implements Listener {
 
     private static final String GUI_TITLE = "Choose Your Scale";
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
         if (event.getView().getTitle().equals(GUI_TITLE)) {
             event.setCancelled(true);
-            double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
 
             ItemStack item = event.getCurrentItem();
+            if (item == null || !item.hasItemMeta()) {
+                return;
+            }
+
+            double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
             String itemName = ChatColor.stripColor(Objects.requireNonNull(item.getItemMeta()).getDisplayName());
             Double[] data = SCALE_DATA.get(itemName);
 
+            if (data == null) {
+                return;
+            }
+
             if (playerScale == data[0]) {
-
                 player.sendMessage(ChatColor.RED + "You are already " + itemName);
-
-            } else if (playerScale != data[0]) {
-
+            } else {
                 setPlayerStatus(player, data);
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
                 player.closeInventory();
-
             }
         }
     }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryDrag(InventoryDragEvent event) {
         Inventory draginventory = event.getInventory();
@@ -92,6 +95,14 @@ public class GUI implements Listener {
             ItemMeta scaleMeta = scaleItem.getItemMeta();
             if (scaleMeta != null) {
                 scaleMeta.setDisplayName(ChatColor.GREEN + itemName);
+                List<String> lore = new ArrayList<>();
+                lore.add(ChatColor.GRAY + "Scale: " + entry.getValue()[0]);
+                lore.add(ChatColor.GRAY + "Movement Speed: " + entry.getValue()[1]);
+                lore.add(ChatColor.GRAY + "Max Health: " + entry.getValue()[2]);
+                lore.add(ChatColor.GRAY + "Attack Speed: " + entry.getValue()[3]);
+                lore.add(ChatColor.GRAY + "Attack Damage: " + entry.getValue()[4]);
+
+                scaleMeta.setLore(lore);
                 scaleItem.setItemMeta(scaleMeta);
             }
             gui.setItem(slot++, scaleItem);
@@ -108,23 +119,17 @@ public class GUI implements Listener {
         player.openInventory(gui);
     }
 
-
     private Material getMaterialFromScale(String scale) {
-        switch (scale) {
-            case "Tiny":
-                return Material.COPPER_INGOT;
-            case "Small":
-                return Material.IRON_INGOT;
-            case "Normal":
-                return Material.GOLD_INGOT;
-            case "Large":
-                return Material.DIAMOND;
-            case "Massive":
-                return Material.NETHERITE_INGOT;
-            default:
-                return Material.AIR;
-        }
+        return switch (scale) {
+            case "Tiny" -> Material.COPPER_INGOT;
+            case "Small" -> Material.IRON_INGOT;
+            case "Normal" -> Material.GOLD_INGOT;
+            case "Large" -> Material.DIAMOND;
+            case "Massive" -> Material.NETHERITE_INGOT;
+            default -> Material.AIR;
+        };
     }
+
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClose(InventoryCloseEvent event) {
