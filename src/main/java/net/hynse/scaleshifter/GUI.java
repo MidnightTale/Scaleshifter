@@ -7,11 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -19,6 +17,11 @@ import java.util.*;
 
 public class GUI implements Listener {
     private static final Map<String, Double[]> SCALE_DATA = new LinkedHashMap<>();
+    public final int CustomModelDataTiny = 69002;
+    public final int CustomModelDataSmall = 69003;
+    public final int CustomModelDataNormal = 69004;
+    public final int CustomModelDataLarge = 69005;
+    public final int CustomModelDataMassive = 69006;
 
     static {
         SCALE_DATA.put("Tiny", new Double[]{0.42, 0.135, 16.0, 4.7, 0.95, 1.36, 0.058, 0.35, -0.16, 2.8, 0.05, 0.97, 4.0, 4.0});
@@ -37,27 +40,38 @@ public class GUI implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         if (event.getView().getTitle().equals(GUI_TITLE)) {
-
-            if (event.getAction() == InventoryAction.CLONE_STACK || event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || event.getAction() == InventoryAction.HOTBAR_SWAP) {
             event.setCancelled(true);
-            return;
-        }
+
 
             ItemStack item = event.getCurrentItem();
             if (item == null || !item.hasItemMeta()) {
                 return;
             }
 
-            double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
-            String itemName = ChatColor.stripColor(Objects.requireNonNull(item.getItemMeta()).getDisplayName());
-            Double[] data = SCALE_DATA.get(itemName);
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null || !meta.hasCustomModelData()) {
+                return;
+            }
+
+            int customModelData = meta.getCustomModelData();
+            Double[] data = null;
+
+            switch (customModelData) {
+                case CustomModelDataTiny -> data = SCALE_DATA.get("Tiny");
+                case CustomModelDataSmall -> data = SCALE_DATA.get("Small");
+                case CustomModelDataNormal -> data = SCALE_DATA.get("Normal");
+                case CustomModelDataLarge -> data = SCALE_DATA.get("Large");
+                case CustomModelDataMassive -> data = SCALE_DATA.get("Massive");
+            }
 
             if (data == null) {
                 return;
             }
 
+            double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
+
             if (playerScale == data[0]) {
-                player.sendMessage(ChatColor.RED + "You are already " + itemName);
+                player.sendMessage(ChatColor.RED + "You are already " + ChatColor.stripColor(meta.getDisplayName()));
             } else {
                 setPlayerStatus(player, data);
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
@@ -66,6 +80,7 @@ public class GUI implements Listener {
         }
     }
 
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryDrag(InventoryDragEvent event) {
         Inventory draginventory = event.getInventory();
@@ -73,6 +88,27 @@ public class GUI implements Listener {
             event.setCancelled(true);
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryMove(InventoryMoveItemEvent event) {
+        Inventory sourceInventory = event.getSource();
+
+        if (sourceInventory != null && sourceInventory.getHolder() instanceof InventoryView) {
+            InventoryView inventoryView = (InventoryView) sourceInventory.getHolder();
+            if (inventoryView.getTitle().equals(GUI_TITLE)) {
+                event.setCancelled(true);
+            }
+        }
+
+        Inventory destinationInventory = event.getDestination();
+        if (destinationInventory != null && destinationInventory.getHolder() instanceof InventoryView) {
+            InventoryView inventoryView = (InventoryView) destinationInventory.getHolder();
+            if (inventoryView.getTitle().equals(GUI_TITLE)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
 
     public void setPlayerStatus(Player player, Double[] data) {
         Scaleshifter.scaleUtil.setPlayerScale(player, data[0]);
@@ -96,10 +132,13 @@ public class GUI implements Listener {
     public void openGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 9, GUI_TITLE);
         int slot = 0;
+        double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
+
         for (Map.Entry<String, Double[]> entry : SCALE_DATA.entrySet()) {
             String itemName = entry.getKey();
             ItemStack scaleItem = new ItemStack(getMaterialFromScale(itemName));
             ItemMeta scaleMeta = scaleItem.getItemMeta();
+
             if (scaleMeta != null) {
                 scaleMeta.setDisplayName(ChatColor.GREEN + itemName);
                 List<String> lore = new ArrayList<>();
@@ -108,23 +147,70 @@ public class GUI implements Listener {
                 lore.add(ChatColor.GRAY + "Max Health: " + entry.getValue()[2]);
                 lore.add(ChatColor.GRAY + "Attack Speed: " + entry.getValue()[3]);
                 lore.add(ChatColor.GRAY + "Attack Damage: " + entry.getValue()[4]);
+                lore.add(ChatColor.GRAY + "Fall Damage Multiple: " + entry.getValue()[5]);
+                lore.add(ChatColor.GRAY + "Gravity: " + entry.getValue()[6]);
+                lore.add(ChatColor.GRAY + "Jump Strength: " + entry.getValue()[7]);
+                lore.add(ChatColor.GRAY + "Knockback Resistance: " + entry.getValue()[8]);
+                lore.add(ChatColor.GRAY + "Safe Fall Distance: " + entry.getValue()[9]);
+                lore.add(ChatColor.GRAY + "Step Height: " + entry.getValue()[10]);
+                lore.add(ChatColor.GRAY + "Block Break Speed: " + entry.getValue()[11]);
+                lore.add(ChatColor.GRAY + "Block Interaction Range: " + entry.getValue()[12]);
+                lore.add(ChatColor.GRAY + "Entity Interaction Range: " + entry.getValue()[13]);
 
                 scaleMeta.setLore(lore);
+
+                switch (itemName) {
+                    case "Tiny" -> {
+                        scaleMeta.setCustomModelData(CustomModelDataTiny);
+                        if (playerScale == SCALE_DATA.get("Tiny")[0]) {
+                            scaleMeta.setEnchantmentGlintOverride(true);
+                        }
+                    }
+                    case "Small" -> {
+                        scaleMeta.setCustomModelData(CustomModelDataSmall);
+                        if (playerScale == SCALE_DATA.get("Small")[0]) {
+                            scaleMeta.setEnchantmentGlintOverride(true);
+                        }
+                    }
+                    case "Normal" -> {
+                        scaleMeta.setCustomModelData(CustomModelDataNormal);
+                        if (playerScale == SCALE_DATA.get("Normal")[0]) {
+                            scaleMeta.setEnchantmentGlintOverride(true);
+                        }
+                    }
+                    case "Large" -> {
+                        scaleMeta.setCustomModelData(CustomModelDataLarge);
+                        if (playerScale == SCALE_DATA.get("Large")[0]) {
+                            scaleMeta.setEnchantmentGlintOverride(true);
+                        }
+                    }
+                    case "Massive" -> {
+                        scaleMeta.setCustomModelData(CustomModelDataMassive);
+                        if (playerScale == SCALE_DATA.get("Massive")[0]) {
+                            scaleMeta.setEnchantmentGlintOverride(true);
+                        }
+                    }
+                }
+
                 scaleItem.setItemMeta(scaleMeta);
             }
             gui.setItem(slot++, scaleItem);
         }
+
         for (int i = slot; i < 9; i++) {
             ItemStack emptyItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
             ItemMeta emptyMeta = emptyItem.getItemMeta();
             if (emptyMeta != null) {
                 emptyMeta.setDisplayName(" ");
+                emptyMeta.setCustomModelData(69007);
                 emptyItem.setItemMeta(emptyMeta);
             }
             gui.setItem(i, emptyItem);
         }
         player.openInventory(gui);
     }
+
+
 
     private Material getMaterialFromScale(String scale) {
         return switch (scale) {
@@ -141,9 +227,32 @@ public class GUI implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
+
         FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (u) -> {
             if (event.getView().getTitle().equals(GUI_TITLE) && (!Scaleshifter.instance.playerInteractions.containsKey(player.getUniqueId()) || !Scaleshifter.instance.playerInteractions.get(player.getUniqueId())))
                 openGUI(player);
         }, 1);
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null && item.hasItemMeta()) {
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null) {
+                    if (item.getType() == Material.COPPER_INGOT || meta.getCustomModelData() == CustomModelDataTiny) {
+                        item.setAmount(0);
+                    }
+                    if (item.getType() == Material.IRON_INGOT || meta.getCustomModelData() == CustomModelDataSmall) {
+                        item.setAmount(0);
+                    }
+                    if (item.getType() == Material.GOLD_INGOT || meta.getCustomModelData() == CustomModelDataNormal) {
+                        item.setAmount(0);
+                    }
+                    if (item.getType() == Material.DIAMOND || meta.getCustomModelData() == CustomModelDataLarge) {
+                        item.setAmount(0);
+                    }
+                    if (item.getType() == Material.NETHERITE_INGOT || meta.getCustomModelData() == CustomModelDataMassive) {
+                        item.setAmount(0);
+                    }
+                }
+            }
+        }
     }
 }
