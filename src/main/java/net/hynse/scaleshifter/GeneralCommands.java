@@ -35,6 +35,6 @@ public class GeneralCommands implements CommandExecutor {
             }
             Scaleshifter.gui.openGUI((Player) sender);
         }
-        return false;
+        return true;
     }
 }
