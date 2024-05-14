@@ -1,8 +1,10 @@
 package net.hynse.scaleshifter;
 
+import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,34 +23,128 @@ public class GUI implements Listener {
             event.setCancelled(true);
             ItemStack item = event.getCurrentItem();
             if (item == null || item.getType() == Material.AIR) return;
+
             if (item.getItemMeta() != null && item.getItemMeta().hasDisplayName()) {
                 String itemName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-                double scale = 1.0;
-                if (itemName.equalsIgnoreCase("Small")) {
-                    scale = 0.75;
+
+                if (itemName.equalsIgnoreCase("Tiny")) {
+                    setPlayerStatus(player,
+                            4.2,
+                            0.10000000149011612,
+                            20.0,
+                            4.0,
+                            1.0,
+                            1.0,
+                            0.08,
+                            0.41999998688697815,
+                            0.0,
+                            3.0,
+                            0.06,
+                            1.0,
+                            4.5,
+                            4.5);
+                } else if (itemName.equalsIgnoreCase("Small")) {
+                    setPlayerStatus(player,
+                            0.8,
+                            0.10000000149011612,
+                            20.0,
+                            4.0,
+                            1.0,
+                            1.0,
+                            0.08,
+                            0.41999998688697815,
+                            0.0,
+                            3.0,
+                            0.06,
+                            1.0,
+                            4.5,
+                            4.5);
                 } else if (itemName.equalsIgnoreCase("Normal")) {
-                    scale = 1.0;
-                } else if (itemName.equalsIgnoreCase("Big")) {
-                    scale = 1.35;
+                    setPlayerStatus(player,
+                            1.0,
+                            0.10000000149011612,
+                            20.0,
+                            4.0,
+                            1.0,
+                            1.0,
+                            0.08,
+                            0.41999998688697815,
+                            0.0,
+                            3.0,
+                            0.06,
+                            1.0,
+                            4.5,
+                            4.5);
+                } else if (itemName.equalsIgnoreCase("Large")) {
+                    setPlayerStatus(player,
+                            1.32,
+                            0.10000000149011612,
+                            20.0,
+                            4.0,
+                            1.0,
+                            1.0,
+                            0.08,
+                            0.41999998688697815,
+                            0.0,
+                            3.0,
+                            0.06,
+                            1.0,
+                            4.5,
+                            4.5);
+                } else if (itemName.equalsIgnoreCase("Massive")) {
+                    setPlayerStatus(player,
+                            1.6,
+                            0.10000000149011612,
+                            20.0,
+                            4.0,
+                            1.0,
+                            1.0,
+                            0.08,
+                            0.41999998688697815,
+                            0.0,
+                            3.0,
+                            0.06,
+                            1.0,
+                            4.5,
+                            4.5);
                 }
-                Scaleshifter.scaleUtil.setPlayerScale(player, scale); // Apply transition when changing scale through GUI
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
                 getLogger().info("Player " + player.getName() + " clicked in inventory. Interaction status updated.");
                 player.closeInventory();
             }
         }
-//        if (event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof Player) {
-//            Player player = (Player) event.getClickedInventory().getHolder();
-//            if (playerInteractions.containsKey(player.getUniqueId()) && !playerInteractions.get(player.getUniqueId())) {
-//                // Player is interacting with the GUI
-//                // Handle their choice based on the clicked item
-//                playerInteractions.put(player.getUniqueId(), true);
-//                getLogger().info("Player " + player.getName() + " clicked in inventory. Interaction status updated.");
-//                // Handle the clicked item
-//                // ...
-//                event.setCancelled(true); // Prevent item from being taken or moved
-//            }
-//        }
+    }
+    public void setPlayerStatus(Player player, Double scale, Double speed, Double maxhealth, Double attackspeed, Double attackdamage, Double falldamangemultiple, Double gravity, Double jumpstrength, Double knockbackresitance, Double safefalldistance, Double stepheight, Double blockbreakspeed, Double blockinteractionrange, Double entityinteractionrange) {
+        Scaleshifter.scaleUtil.setPlayerScale(player, scale);
+        FoliaScheduler.getRegionScheduler().runDelayed(Scaleshifter.instance, player.getLocation(), (o) -> {
+            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed);
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxhealth);
+            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackspeed);
+            player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(attackdamage);
+            player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER).setBaseValue(falldamangemultiple);
+            player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(gravity);
+            player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH).setBaseValue(jumpstrength);
+            player.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(knockbackresitance);
+            player.getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(safefalldistance);
+            player.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(stepheight);
+            player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED).setBaseValue(blockbreakspeed);
+            player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE).setBaseValue(blockinteractionrange);
+            player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE).setBaseValue(entityinteractionrange);
+        },10);
+        getLogger().info("Setting status" + player
+                + "To (Speed:" + speed
+                + ", Max Health" + maxhealth
+                + ", Attack Speed" + attackspeed
+                + ", Attack Damage" + attackdamage
+                + ", Fall Damage Multiple" + falldamangemultiple
+                + ", Gravity" + gravity
+                + ", Jump Strength" + jumpstrength
+                + ", Knockback Resitance" + knockbackresitance
+                + ", Safe Fall Distance" + safefalldistance
+                + ", Step Height" + stepheight
+                + ", Block Break Speed" + blockbreakspeed
+                + ", Block Interaction Range" + blockinteractionrange
+                + ", Entity Interaction Range" + entityinteractionrange);
     }
 
     public void openGUI(Player player) {
@@ -60,7 +156,7 @@ public class GUI implements Listener {
             smallScaleMeta.setDisplayName(ChatColor.GREEN + "Small");
             smallScaleItem.setItemMeta(smallScaleMeta);
         }
-        gui.setItem(2, smallScaleItem);
+        gui.setItem(0, smallScaleItem);
 
         ItemStack normalScaleItem = new ItemStack(Material.GOLD_INGOT);
         ItemMeta normalScaleMeta = normalScaleItem.getItemMeta();
@@ -68,15 +164,23 @@ public class GUI implements Listener {
             normalScaleMeta.setDisplayName(ChatColor.YELLOW + "Normal");
             normalScaleItem.setItemMeta(normalScaleMeta);
         }
-        gui.setItem(4, normalScaleItem);
+        gui.setItem(1, normalScaleItem);
 
-        ItemStack bigScaleItem = new ItemStack(Material.DIAMOND);
+        ItemStack largeScaleItem = new ItemStack(Material.DIAMOND);
+        ItemMeta largeScaleMeta = largeScaleItem.getItemMeta();
+        if (largeScaleMeta != null) {
+            largeScaleMeta.setDisplayName(ChatColor.AQUA + "Large");
+            largeScaleItem.setItemMeta(largeScaleMeta);
+        }
+        gui.setItem(2, largeScaleItem);
+
+        ItemStack bigScaleItem = new ItemStack(Material.NETHERITE_INGOT);
         ItemMeta bigScaleMeta = bigScaleItem.getItemMeta();
         if (bigScaleMeta != null) {
-            bigScaleMeta.setDisplayName(ChatColor.AQUA + "Big");
+            bigScaleMeta.setDisplayName(ChatColor.RED + "Massive");
             bigScaleItem.setItemMeta(bigScaleMeta);
         }
-        gui.setItem(6, bigScaleItem);
+        gui.setItem(3, bigScaleItem);
 
         player.openInventory(gui);
         getLogger().info("Opening GUI for player " + player.getName());

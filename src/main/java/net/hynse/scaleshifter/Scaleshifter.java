@@ -1,29 +1,14 @@
 package net.hynse.scaleshifter;
 
 import me.nahu.scheduler.wrapper.FoliaWrappedJavaPlugin;
-import me.nahu.scheduler.wrapper.runnable.WrappedRunnable;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -57,6 +42,8 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
         getServer().getPluginManager().registerEvents(new GUI(), this);
         getCommand("scale").setExecutor(new ScaleCommands());
         getCommand("scaleplayer").setExecutor(new ScaleCommands());
+        getCommand("scalegui").setExecutor(new GeneralCommands());
+        getCommand("scaleguiplayer").setExecutor(new GeneralCommands());
 
     }
     public void datainit() {
