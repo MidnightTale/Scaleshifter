@@ -1,16 +1,8 @@
 package net.hynse.scaleshifter;
 
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import me.nahu.scheduler.wrapper.FoliaWrappedJavaPlugin;
-import me.nahu.scheduler.wrapper.runnable.WrappedRunnable;
-import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
