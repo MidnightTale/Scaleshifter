@@ -7,8 +7,10 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,7 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import static org.bukkit.Bukkit.getLogger;
 
 public class GUI implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (event.getClickedInventory() != null && event.getClickedInventory().equals(player.getOpenInventory().getTopInventory())) {
@@ -30,35 +32,35 @@ public class GUI implements Listener {
                 if (itemName.equalsIgnoreCase("Tiny")) {
                     setPlayerStatus(player,
                             0.42,
-                            0.10000000149011612,
-                            20.0,
+                            0.135,
+                            16.0,
+                            4.7,
+                            0.95,
+                            1.36,
+                            0.058,
+                            0.35,
+                            -0.16,
+                            2.8,
+                            0.05,
+                            0.97,
                             4.0,
-                            1.0,
-                            1.0,
-                            0.08,
-                            0.41999998688697815,
-                            0.0,
-                            3.0,
-                            0.06,
-                            1.0,
-                            4.5,
-                            4.5);
+                            4.0);
                 } else if (itemName.equalsIgnoreCase("Small")) {
                     setPlayerStatus(player,
                             0.8,
-                            0.10000000149011612,
-                            20.0,
-                            4.0,
-                            1.0,
-                            1.0,
-                            0.08,
-                            0.41999998688697815,
-                            0.0,
-                            3.0,
-                            0.06,
-                            1.0,
-                            4.5,
-                            4.5);
+                            0.12,
+                            18.0,
+                            4.26,
+                            0.97,
+                            1.2,
+                            0.076,
+                            0.37,
+                            -0.1,
+                            2.5,
+                            0.055,
+                            0.98,
+                            4.2,
+                            4.2);
                 } else if (itemName.equalsIgnoreCase("Normal")) {
                     setPlayerStatus(player,
                             1.0,
@@ -78,38 +80,38 @@ public class GUI implements Listener {
                 } else if (itemName.equalsIgnoreCase("Large")) {
                     setPlayerStatus(player,
                             1.32,
-                            0.10000000149011612,
-                            20.0,
-                            4.0,
-                            1.0,
-                            1.0,
-                            0.08,
-                            0.41999998688697815,
-                            0.0,
-                            3.0,
-                            0.06,
-                            1.0,
+                            0.096,
+                            26.0,
+                            3.75,
+                            1.5,
+                            0.95,
+                            0.085,
+                            0.56,
+                            0.16,
                             4.5,
-                            4.5);
+                            0.08,
+                            1.3,
+                            5.0,
+                            5.0);
                 } else if (itemName.equalsIgnoreCase("Massive")) {
                     setPlayerStatus(player,
                             1.6,
-                            0.10000000149011612,
-                            20.0,
-                            4.0,
-                            1.0,
-                            1.0,
-                            0.08,
-                            0.41999998688697815,
-                            0.0,
-                            3.0,
-                            0.06,
-                            1.0,
-                            4.5,
-                            4.5);
+                            0.09265,
+                            32.0,
+                            3.4,
+                            2.0,
+                            0.9,
+                            0.087,
+                            0.59,
+                            0.37,
+                            5.0,
+                            0.12,
+                            1.6,
+                            5.5,
+                            5.5);
                 }
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
-                getLogger().info("Player " + player.getName() + " clicked in inventory. Interaction status updated.");
+//                getLogger().info("Player " + player.getName() + " clicked in inventory. Interaction status updated.");
                 player.closeInventory();
             }
         }
@@ -130,21 +132,21 @@ public class GUI implements Listener {
             player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED).setBaseValue(blockbreakspeed);
             player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE).setBaseValue(blockinteractionrange);
             player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE).setBaseValue(entityinteractionrange);
-        },10);
-        getLogger().info("Setting status" + player
-                + "To (Speed:" + speed
-                + ", Max Health" + maxhealth
-                + ", Attack Speed" + attackspeed
-                + ", Attack Damage" + attackdamage
-                + ", Fall Damage Multiple" + falldamangemultiple
-                + ", Gravity" + gravity
-                + ", Jump Strength" + jumpstrength
-                + ", Knockback Resitance" + knockbackresitance
-                + ", Safe Fall Distance" + safefalldistance
-                + ", Step Height" + stepheight
-                + ", Block Break Speed" + blockbreakspeed
-                + ", Block Interaction Range" + blockinteractionrange
-                + ", Entity Interaction Range" + entityinteractionrange);
+            },10);
+//        getLogger().info("Setting status" + player
+//                + "To (Speed: " + speed
+//                + ", Max Health: " + maxhealth
+//                + ", Attack Speed: " + attackspeed
+//                + ", Attack Damage: " + attackdamage
+//                + ", Fall Damage Multiple: " + falldamangemultiple
+//                + ", Gravity: " + gravity
+//                + ", Jump Strength: " + jumpstrength
+//                + ", Knockback Resitance: " + knockbackresitance
+//                + ", Safe Fall Distance: " + safefalldistance
+//                + ", Step Height: " + stepheight
+//                + ", Block Break Speed: " + blockbreakspeed
+//                + ", Block Interaction Range: " + blockinteractionrange
+//                + ", Entity Interaction Range: " + entityinteractionrange);
     }
 
     public void openGUI(Player player) {
@@ -202,6 +204,13 @@ public class GUI implements Listener {
         gui.setItem(8, emptyItem);
 
         player.openInventory(gui);
-        getLogger().info("Opening GUI for player " + player.getName());
+//        getLogger().info("Opening GUI for player " + player.getName());
+    }
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        if (event.getView().getTitle().equals("Choose Your Scale") && !Scaleshifter.instance.playerInteractions.containsKey(player.getUniqueId()) || !Scaleshifter.instance.playerInteractions.get(player.getUniqueId()))  {
+        openGUI(player);
+        }
     }
 }
