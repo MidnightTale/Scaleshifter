@@ -48,6 +48,8 @@ public class GUI implements Listener {
                 return;
             }
 
+
+
             ItemMeta meta = item.getItemMeta();
             if (meta == null || !meta.hasCustomModelData()) {
                 return;
@@ -73,37 +75,65 @@ public class GUI implements Listener {
             if (playerScale == data[0]) {
                 player.sendMessage(ChatColor.RED + "You are already " + ChatColor.stripColor(meta.getDisplayName()));
             } else {
-                FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (u) -> {
-                    for (ItemStack item2 : player.getInventory().getContents()) {
-                        if (item2 != null && item2.hasItemMeta()) {
-                            ItemMeta meta2 = item2.getItemMeta();
-                            if (meta2 != null && meta.hasCustomModelData()) {
-                                if (item2.getType() == Material.COPPER_INGOT || meta2.getCustomModelData() == CustomModelDataTiny) {
-                                    item2.setAmount(0);
-                                }
-                                if (item2.getType() == Material.IRON_INGOT || meta2.getCustomModelData() == CustomModelDataSmall) {
-                                    item2.setAmount(0);
-                                }
-                                if (item2.getType() == Material.GOLD_INGOT || meta2.getCustomModelData() == CustomModelDataNormal) {
-                                    item2.setAmount(0);
-                                }
-                                if (item2.getType() == Material.DIAMOND || meta2.getCustomModelData() == CustomModelDataLarge) {
-                                    item2.setAmount(0);
-                                }
-                                if (item2.getType() == Material.NETHERITE_INGOT || meta2.getCustomModelData() == CustomModelDataMassive) {
-                                    item2.setAmount(0);
-                                }
-                            }
-                        }
-                    }
-                }, 2);
+
                 setPlayerStatus(player, data);
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
                 player.closeInventory();
             }
         }
     }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        Player player = (Player) event.getPlayer();
 
+        if (event.getView().getTitle().equals(GUI_TITLE)) {
+            // Check the player's cursor
+            ItemStack currentItem = player.getItemOnCursor();
+            deleteItemIfMatchesCriteria(currentItem);
+
+            // Check the player's inventory
+            for (ItemStack item : player.getInventory().getContents()) {
+                deleteItemIfMatchesCriteria(item);
+            }
+        }
+    }
+
+    private void deleteItemIfMatchesCriteria(ItemStack item) {
+        if (item != null && item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null && meta.hasCustomModelData()) {
+                switch (item.getType()) {
+                    case COPPER_INGOT:
+                        if (meta.getCustomModelData() == CustomModelDataTiny) {
+                            item.setAmount(0);
+                        }
+                        break;
+                    case IRON_INGOT:
+                        if (meta.getCustomModelData() == CustomModelDataSmall) {
+                            item.setAmount(0);
+                        }
+                        break;
+                    case GOLD_INGOT:
+                        if (meta.getCustomModelData() == CustomModelDataNormal) {
+                            item.setAmount(0);
+                        }
+                        break;
+                    case DIAMOND:
+                        if (meta.getCustomModelData() == CustomModelDataLarge) {
+                            item.setAmount(0);
+                        }
+                        break;
+                    case NETHERITE_INGOT:
+                        if (meta.getCustomModelData() == CustomModelDataMassive) {
+                            item.setAmount(0);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryDrag(InventoryDragEvent event) {
