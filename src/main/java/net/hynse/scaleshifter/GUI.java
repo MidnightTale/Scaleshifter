@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -29,12 +30,18 @@ public class GUI implements Listener {
 
     private static final String GUI_TITLE = "Choose Your Scale";
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent event) {
+        // Only proceed if the event is not a bottom inventory click
+
         Player player = (Player) event.getWhoClicked();
 
         if (event.getView().getTitle().equals(GUI_TITLE)) {
+
+            if (event.getAction() == InventoryAction.CLONE_STACK || event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || event.getAction() == InventoryAction.HOTBAR_SWAP) {
             event.setCancelled(true);
+            return;
+        }
 
             ItemStack item = event.getCurrentItem();
             if (item == null || !item.hasItemMeta()) {
