@@ -24,6 +24,9 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
     @Override
     public void onEnable() {
         instance = this;
+        dataManagers = new DataManagers();
+        gui = new GUI();
+        scaleUtil = new ScaleUtil();
 
         getLogger().info("Scaleshifter enabled");
         register();
