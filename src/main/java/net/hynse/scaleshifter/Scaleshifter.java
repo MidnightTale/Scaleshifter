@@ -96,7 +96,7 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
     public void onDisable() {
 //        getLogger().info("Scaleshifter disabled");
         // Save player interactions data to file
-        // saveInteractions();
+        dataManagers.saveInteractions();
     }
     public void register() {
         getServer().getPluginManager().registerEvents(this, this);
