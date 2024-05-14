@@ -21,7 +21,7 @@ public class GUI implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (event.getClickedInventory() != null && event.getClickedInventory().equals(player.getOpenInventory().getTopInventory())) {
+        if (event.getClickedInventory() != null && event.getClickedInventory().equals(player.getOpenInventory().getTopInventory()) && event.getView().getTitle().equals("Choose Your Scale")) {
             event.setCancelled(true);
             ItemStack item = event.getCurrentItem();
             if (item == null || item.getType() == Material.AIR) return;

@@ -26,9 +26,14 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
     public static GUI gui;
     public static ScaleUtil scaleUtil;
     private PlayerHitbox hitbox;
+    public static ScaleOrb scaleOrb;
 
     public final HashMap<UUID, Boolean> playerInteractions = new HashMap<>();
 
+    // TODO: Custom item to change size
+    // Make it Craftable and open the gui size reset interaction data
+
+    // TODO: Detail info about each size in gui size
 
     @Override
     public void onEnable() {
@@ -37,11 +42,13 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
         gui = new GUI();
         scaleUtil = new ScaleUtil();
         hitbox = new PlayerHitbox();
+        scaleOrb = new ScaleOrb();
 
         getLogger().info("Scaleshifter enabled");
         register();
         dataManagers.datasetup();
 
+        scaleOrb.item();
 
         // Schedule a task to check player intersection with hitbox
         new WrappedRunnable() {
@@ -110,7 +117,9 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        getLogger().info("Player " + player.getName() + " joined the server.");
+        NamespacedKey recipeKey = new NamespacedKey(instance, "scale_orb");
+        player.discoverRecipe(recipeKey);
+//        getLogger().info("Player " + player.getName() + " joined the server.");
         if (!playerInteractions.containsKey(player.getUniqueId()) || !playerInteractions.get(player.getUniqueId())) {
             // Player was previously interacting with the GUI but didn't make a choice
             // Reopen the GUI for them
