@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -53,6 +54,20 @@ public class GUI implements Listener {
                 player.closeInventory();
 
             }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryClick2(InventoryClickEvent event) {
+        Inventory clickedInventory = event.getClickedInventory();
+        if (clickedInventory != null && event.getView().getTitle().equals(GUI_TITLE)) {
+            event.setCancelled(true);
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryDrag(InventoryDragEvent event) {
+        Inventory draginventory = event.getInventory();
+        if (draginventory != null && event.getView().getTitle().equals(GUI_TITLE)) {
+            event.setCancelled(true);
         }
     }
 
