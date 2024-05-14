@@ -29,7 +29,7 @@ public class GUI implements Listener {
 
                 if (itemName.equalsIgnoreCase("Tiny")) {
                     setPlayerStatus(player,
-                            4.2,
+                            0.42,
                             0.10000000149011612,
                             20.0,
                             4.0,
