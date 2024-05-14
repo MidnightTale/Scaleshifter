@@ -150,6 +150,14 @@ public class GUI implements Listener {
     public void openGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 9, "Choose Your Scale");
 
+        ItemStack tinyScaleItem = new ItemStack(Material.COPPER_INGOT);
+        ItemMeta tinyScaleMeta = tinyScaleItem.getItemMeta();
+        if (tinyScaleMeta != null) {
+            tinyScaleMeta.setDisplayName(ChatColor.GREEN + "Tiny");
+            tinyScaleItem.setItemMeta(tinyScaleMeta);
+        }
+        gui.setItem(0, tinyScaleItem);
+
         ItemStack smallScaleItem = new ItemStack(Material.IRON_INGOT);
         ItemMeta smallScaleMeta = smallScaleItem.getItemMeta();
         if (smallScaleMeta != null) {
@@ -192,7 +200,6 @@ public class GUI implements Listener {
         gui.setItem(6, emptyItem);
         gui.setItem(7, emptyItem);
         gui.setItem(8, emptyItem);
-        gui.setItem(9, emptyItem);
 
         player.openInventory(gui);
         getLogger().info("Opening GUI for player " + player.getName());
