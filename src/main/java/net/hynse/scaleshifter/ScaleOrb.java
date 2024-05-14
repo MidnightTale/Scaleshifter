@@ -51,13 +51,17 @@ public class ScaleOrb implements Listener {
     public void onPlayerUse(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
+
+        if (item == null || item.getType() != CustomItem) return;
+
         ItemMeta meta = item.getItemMeta();
-        if (meta != null && meta.getCustomModelData() == CustomModelData && item.getType() == CustomItem) {
-            Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), false);
-            Scaleshifter.gui.openGUI(player);
-            item.setAmount(0);
-        }
+        if (meta == null || meta.getCustomModelData() != CustomModelData) return;
+
+        Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), false);
+        Scaleshifter.gui.openGUI(player);
+        item.setAmount(0);
     }
+
 
 
     @EventHandler

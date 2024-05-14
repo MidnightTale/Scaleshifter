@@ -36,7 +36,7 @@ public class GUI implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         if (event.getView().getTitle().equals(GUI_TITLE)) {
-
+            event.setCancelled(true);
             double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
 
             ItemStack item = event.getCurrentItem();
@@ -54,13 +54,6 @@ public class GUI implements Listener {
                 player.closeInventory();
 
             }
-        }
-    }
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onInventoryClick2(InventoryClickEvent event) {
-        Inventory clickedInventory = event.getClickedInventory();
-        if (clickedInventory != null && event.getView().getTitle().equals(GUI_TITLE)) {
-            event.setCancelled(true);
         }
     }
     @EventHandler(priority = EventPriority.HIGH)
