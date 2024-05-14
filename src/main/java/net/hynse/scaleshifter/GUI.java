@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -86,7 +87,7 @@ public class GUI implements Listener {
     public void onInventoryOpen(InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
 
-        if (event.getView().getTitle().equals(GUI_TITLE)) {
+        if (!event.getView().getTitle().equals(GUI_TITLE)) {
             // Check the player's cursor
             ItemStack currentItem = player.getItemOnCursor();
             deleteItemIfMatchesCriteria(currentItem);
@@ -97,6 +98,18 @@ public class GUI implements Listener {
             }
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onItemDrop(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        ItemStack droppedItem = event.getItemDrop().getItemStack();
+
+        // Check if the dropped item is in the GUI inventory
+        if (!event.getItemDrop().getLocation().equals(player.getLocation())) {
+            deleteItemIfMatchesCriteria(droppedItem);
+        }
+    }
+
 
     private void deleteItemIfMatchesCriteria(ItemStack item) {
         if (item != null && item.hasItemMeta()) {
