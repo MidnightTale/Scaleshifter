@@ -156,7 +156,7 @@ public class GUI implements Listener {
             smallScaleMeta.setDisplayName(ChatColor.GREEN + "Small");
             smallScaleItem.setItemMeta(smallScaleMeta);
         }
-        gui.setItem(0, smallScaleItem);
+        gui.setItem(1, smallScaleItem);
 
         ItemStack normalScaleItem = new ItemStack(Material.GOLD_INGOT);
         ItemMeta normalScaleMeta = normalScaleItem.getItemMeta();
@@ -164,7 +164,7 @@ public class GUI implements Listener {
             normalScaleMeta.setDisplayName(ChatColor.YELLOW + "Normal");
             normalScaleItem.setItemMeta(normalScaleMeta);
         }
-        gui.setItem(1, normalScaleItem);
+        gui.setItem(2, normalScaleItem);
 
         ItemStack largeScaleItem = new ItemStack(Material.DIAMOND);
         ItemMeta largeScaleMeta = largeScaleItem.getItemMeta();
@@ -172,7 +172,7 @@ public class GUI implements Listener {
             largeScaleMeta.setDisplayName(ChatColor.AQUA + "Large");
             largeScaleItem.setItemMeta(largeScaleMeta);
         }
-        gui.setItem(2, largeScaleItem);
+        gui.setItem(3, largeScaleItem);
 
         ItemStack bigScaleItem = new ItemStack(Material.NETHERITE_INGOT);
         ItemMeta bigScaleMeta = bigScaleItem.getItemMeta();
@@ -180,7 +180,19 @@ public class GUI implements Listener {
             bigScaleMeta.setDisplayName(ChatColor.RED + "Massive");
             bigScaleItem.setItemMeta(bigScaleMeta);
         }
-        gui.setItem(3, bigScaleItem);
+        gui.setItem(4, bigScaleItem);
+
+        ItemStack emptyItem = new ItemStack(Material.GRAY_STAINED_GLASS);
+        ItemMeta emptyMeta = emptyItem.getItemMeta();
+        if (emptyMeta != null) {
+            emptyMeta.setDisplayName("");
+            emptyItem.setItemMeta(emptyMeta);
+        }
+        gui.setItem(5, emptyItem);
+        gui.setItem(6, emptyItem);
+        gui.setItem(7, emptyItem);
+        gui.setItem(8, emptyItem);
+        gui.setItem(9, emptyItem);
 
         player.openInventory(gui);
         getLogger().info("Opening GUI for player " + player.getName());
