@@ -18,7 +18,7 @@ public class GeneralCommands implements CommandExecutor {
             }
 
             if (args.length != 1) {
-                sender.sendMessage(ChatColor.RED + "Usage: /scalegui <playername>");
+                sender.sendMessage(ChatColor.RED + "Usage: /scaleguiplayer <playername>");
                 return true;
             }
 
@@ -28,6 +28,7 @@ public class GeneralCommands implements CommandExecutor {
                 return true;
             }
             Scaleshifter.gui.openGUI(target.getPlayer());
+            return true;
         } else if (command.getName().equalsIgnoreCase("scalegui")) {
             if (!sender.hasPermission("scaleshifter.scalegui")) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");

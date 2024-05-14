@@ -16,12 +16,12 @@ commands:
 
   scalegui:
     description: Open gui.
-    usage: /scalegui <value>
+    usage: /scalegui
     permission: scaleshifter.scalegui
 
   scaleguiplayer:
     description: Open gui.
-    usage: /scaleguiplayer <value>
+    usage: /scaleguiplayer <player>
     permission: scaleshifter.scaleguiplayer
 
 permissions:
