@@ -68,11 +68,35 @@ public class GUI implements Listener {
                 return;
             }
 
-            double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
+            double playerScale = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SCALE)).getBaseValue();
 
             if (playerScale == data[0]) {
                 player.sendMessage(ChatColor.RED + "You are already " + ChatColor.stripColor(meta.getDisplayName()));
             } else {
+                FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (u) -> {
+                    for (ItemStack item2 : player.getInventory().getContents()) {
+                        if (item2 != null && item2.hasItemMeta()) {
+                            ItemMeta meta2 = item2.getItemMeta();
+                            if (meta2 != null && meta.hasCustomModelData()) {
+                                if (item2.getType() == Material.COPPER_INGOT || meta2.getCustomModelData() == CustomModelDataTiny) {
+                                    item2.setAmount(0);
+                                }
+                                if (item2.getType() == Material.IRON_INGOT || meta2.getCustomModelData() == CustomModelDataSmall) {
+                                    item2.setAmount(0);
+                                }
+                                if (item2.getType() == Material.GOLD_INGOT || meta2.getCustomModelData() == CustomModelDataNormal) {
+                                    item2.setAmount(0);
+                                }
+                                if (item2.getType() == Material.DIAMOND || meta2.getCustomModelData() == CustomModelDataLarge) {
+                                    item2.setAmount(0);
+                                }
+                                if (item2.getType() == Material.NETHERITE_INGOT || meta2.getCustomModelData() == CustomModelDataMassive) {
+                                    item2.setAmount(0);
+                                }
+                            }
+                        }
+                    }
+                }, 2);
                 setPlayerStatus(player, data);
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
                 player.closeInventory();
@@ -83,8 +107,7 @@ public class GUI implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryDrag(InventoryDragEvent event) {
-        Inventory draginventory = event.getInventory();
-        if (draginventory != null && event.getView().getTitle().equals(GUI_TITLE)) {
+        if (event.getView().getTitle().equals(GUI_TITLE)) {
             event.setCancelled(true);
         }
     }
@@ -93,16 +116,14 @@ public class GUI implements Listener {
     public void onInventoryMove(InventoryMoveItemEvent event) {
         Inventory sourceInventory = event.getSource();
 
-        if (sourceInventory != null && sourceInventory.getHolder() instanceof InventoryView) {
-            InventoryView inventoryView = (InventoryView) sourceInventory.getHolder();
+        if (sourceInventory.getHolder() instanceof InventoryView inventoryView) {
             if (inventoryView.getTitle().equals(GUI_TITLE)) {
                 event.setCancelled(true);
             }
         }
 
         Inventory destinationInventory = event.getDestination();
-        if (destinationInventory != null && destinationInventory.getHolder() instanceof InventoryView) {
-            InventoryView inventoryView = (InventoryView) destinationInventory.getHolder();
+        if (destinationInventory.getHolder() instanceof InventoryView inventoryView) {
             if (inventoryView.getTitle().equals(GUI_TITLE)) {
                 event.setCancelled(true);
             }
@@ -113,26 +134,26 @@ public class GUI implements Listener {
     public void setPlayerStatus(Player player, Double[] data) {
         Scaleshifter.scaleUtil.setPlayerScale(player, data[0]);
         FoliaScheduler.getRegionScheduler().runDelayed(Scaleshifter.instance, player.getLocation(), (o) -> {
-            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(data[1]);
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(data[2]);
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(data[3]);
-            player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(data[4]);
-            player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER).setBaseValue(data[5]);
-            player.getAttribute(Attribute.GENERIC_GRAVITY).setBaseValue(data[6]);
-            player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH).setBaseValue(data[7]);
-            player.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(data[8]);
-            player.getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE).setBaseValue(data[9]);
-            player.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(data[10]);
-            player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED).setBaseValue(data[11]);
-            player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE).setBaseValue(data[12]);
-            player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE).setBaseValue(data[13]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(data[1]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(data[2]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(data[3]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(data[4]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER)).setBaseValue(data[5]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_GRAVITY)).setBaseValue(data[6]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH)).setBaseValue(data[7]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(data[8]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE)).setBaseValue(data[9]);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_STEP_HEIGHT)).setBaseValue(data[10]);
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED)).setBaseValue(data[11]);
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)).setBaseValue(data[12]);
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).setBaseValue(data[13]);
         }, 10);
     }
 
     public void openGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 9, GUI_TITLE);
         int slot = 0;
-        double playerScale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
+        double playerScale = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SCALE)).getBaseValue();
 
         for (Map.Entry<String, Double[]> entry : SCALE_DATA.entrySet()) {
             String itemName = entry.getKey();
@@ -232,27 +253,5 @@ public class GUI implements Listener {
             if (event.getView().getTitle().equals(GUI_TITLE) && (!Scaleshifter.instance.playerInteractions.containsKey(player.getUniqueId()) || !Scaleshifter.instance.playerInteractions.get(player.getUniqueId())))
                 openGUI(player);
         }, 1);
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.hasItemMeta()) {
-                ItemMeta meta = item.getItemMeta();
-                if (meta != null) {
-                    if (item.getType() == Material.COPPER_INGOT || meta.getCustomModelData() == CustomModelDataTiny) {
-                        item.setAmount(0);
-                    }
-                    if (item.getType() == Material.IRON_INGOT || meta.getCustomModelData() == CustomModelDataSmall) {
-                        item.setAmount(0);
-                    }
-                    if (item.getType() == Material.GOLD_INGOT || meta.getCustomModelData() == CustomModelDataNormal) {
-                        item.setAmount(0);
-                    }
-                    if (item.getType() == Material.DIAMOND || meta.getCustomModelData() == CustomModelDataLarge) {
-                        item.setAmount(0);
-                    }
-                    if (item.getType() == Material.NETHERITE_INGOT || meta.getCustomModelData() == CustomModelDataMassive) {
-                        item.setAmount(0);
-                    }
-                }
-            }
-        }
     }
 }
