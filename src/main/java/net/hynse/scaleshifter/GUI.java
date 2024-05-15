@@ -37,19 +37,15 @@ public class GUI implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent event) {
-        // Only proceed if the event is not a bottom inventory click
 
         Player player = (Player) event.getWhoClicked();
         if (event.getView().getTitle().equals(GUI_TITLE)) {
-            event.setCancelled(true); //BRO what the Hel!
-
+            event.setCancelled(true);
 
             ItemStack item = event.getCurrentItem();
             if (item == null || !item.hasItemMeta()) {
                 return;
             }
-
-
 
             ItemMeta meta = item.getItemMeta();
             if (meta == null || !meta.hasCustomModelData()) {
@@ -57,7 +53,6 @@ public class GUI implements Listener {
             }
 
             int customModelData = meta.getCustomModelData();
-
 
             switch (customModelData) {
                 case CustomModelDataTiny -> data = SCALE_DATA.get("Tiny");
@@ -224,7 +219,6 @@ public class GUI implements Listener {
             default -> Material.AIR;
         };
     }
-
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClose(InventoryCloseEvent event) {
