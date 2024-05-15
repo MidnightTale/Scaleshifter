@@ -33,7 +33,7 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
 
         register();
         dataManagers.datasetup();
-        scaleOrb.item()
+        scaleOrb.item();
         massiveDamageTiny.ScheduleTask_A();
     }
 

@@ -23,6 +23,7 @@ public class GUI implements Listener {
     public final int CustomModelDataNormal = 69004;
     public final int CustomModelDataLarge = 69005;
     public final int CustomModelDataMassive = 69006;
+    public final int CustomModelDataRandom = 69008;
     public Double[] data = null;
 
     static {
