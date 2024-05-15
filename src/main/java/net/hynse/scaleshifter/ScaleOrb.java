@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,6 +30,9 @@ public class ScaleOrb implements Listener {
 
         meta.setDisplayName("Scale Orb");
         meta.setCustomModelData(CustomModelData);
+        meta.setMaxStackSize(1);
+        meta.setEnchantmentGlintOverride(true);
+        meta.setRarity(ItemRarity.EPIC);
         scaleOrbItem.setItemMeta(meta);
 
         ShapedRecipe recipe = new ShapedRecipe(itemKey, scaleOrbItem);
