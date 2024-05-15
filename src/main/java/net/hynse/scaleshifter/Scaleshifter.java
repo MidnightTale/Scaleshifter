@@ -31,14 +31,10 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
         scaleOrb = new ScaleOrb();
         massiveDamageTiny = new MassiveDamageTiny();
 
-        getLogger().info("Scaleshifter enabled");
         register();
         dataManagers.datasetup();
-
-        scaleOrb.item();
-
+        scaleOrb.item()
         massiveDamageTiny.ScheduleTask_A();
-
     }
 
     @Override
@@ -56,7 +52,5 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
         getCommand("scaleplayer").setExecutor(new ScaleCommands());
         getCommand("scalegui").setExecutor(new GeneralCommands());
         getCommand("scaleguiplayer").setExecutor(new GeneralCommands());
-
     }
-
 }
