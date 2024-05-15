@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ScaleOrb implements Listener {
     private final int CustomModelData = 69001;
     private final Material CustomItem = Material.HEART_OF_THE_SEA;
-
     private final NamespacedKey itemKey;
 
     public ScaleOrb() {
@@ -30,10 +28,7 @@ public class ScaleOrb implements Listener {
         ItemMeta meta = scaleOrbItem.getItemMeta();
 
         meta.setDisplayName("Scale Orb");
-        meta.setEnchantmentGlintOverride(true);
-        meta.setRarity(ItemRarity.EPIC);
         meta.setCustomModelData(CustomModelData);
-        meta.setMaxStackSize(1);
         scaleOrbItem.setItemMeta(meta);
 
         ShapedRecipe recipe = new ShapedRecipe(itemKey, scaleOrbItem);
@@ -55,14 +50,12 @@ public class ScaleOrb implements Listener {
         if (item == null || item.getType() != CustomItem) return;
 
         ItemMeta meta = item.getItemMeta();
-        if (meta == null || meta.getCustomModelData() != CustomModelData) return;
+        if (meta == null || !meta.hasCustomModelData() || meta.getCustomModelData() != CustomModelData) return;
 
         Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), false);
         Scaleshifter.gui.openGUI(player);
         item.setAmount(0);
     }
-
-
 
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent event) {
@@ -72,7 +65,7 @@ public class ScaleOrb implements Listener {
         for (ItemStack item : matrix) {
             if (item != null && item.getType() == CustomItem) {
                 ItemMeta meta = item.getItemMeta();
-                if (meta != null && meta.getCustomModelData() == CustomModelData) {
+                if (meta != null && meta.hasCustomModelData() && meta.getCustomModelData() == CustomModelData) {
                     inventory.setResult(null);
                     return;
                 }
