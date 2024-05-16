@@ -30,8 +30,8 @@ public class GUI implements Listener {
         SCALE_DATA.put("Tiny", new Double[]{0.42, 0.135, 16.0, 4.7, 0.95, 1.36, 0.058, 0.35, -0.16, 2.8, 0.5, 0.97, 4.0, 4.0});
         SCALE_DATA.put("Small", new Double[]{0.8, 0.12, 18.0, 4.26, 0.97, 1.2, 0.076, 0.37, -0.1, 2.5, 0.55, 0.98, 4.2, 4.2});
         SCALE_DATA.put("Normal", new Double[]{1.0, 0.10000000149011612, 20.0, 4.0, 1.0, 1.0, 0.08, 0.41999998688697815, 0.0, 3.0, 0.6, 1.0, 4.5, 4.5});
-        SCALE_DATA.put("Large", new Double[]{1.32, 0.096, 26.0, 3.75, 1.5, 0.95, 0.085, 0.56, 0.16, 4.5, 0.8, 1.3, 5.0, 5.0});
-        SCALE_DATA.put("Massive", new Double[]{1.6, 0.09265, 32.0, 3.4, 2.0, 0.9, 0.087, 0.59, 0.37, 5.0, 1.2, 1.6, 5.5, 5.5});
+        SCALE_DATA.put("Large", new Double[]{1.32, 0.096, 26.0, 3.75, 1.5, 0.95, 0.085, 0.56, 0.16, 4.5, 0.98, 1.3, 5.0, 5.0});
+        SCALE_DATA.put("Massive", new Double[]{1.6, 0.09265, 32.0, 3.4, 2.0, 0.9, 0.087, 0.59, 0.37, 5.0, 1.5, 1.6, 5.5, 5.5});
     }
 
     private static final String GUI_TITLE = "Choose Your Scale";
