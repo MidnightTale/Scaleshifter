@@ -123,7 +123,7 @@ public class EventListenerPlayer implements Listener {
                                 powerBar.append("█");
                             } else {
                                 // Gray color for placeholder
-                                powerBar.append(ChatColor.GRAY).append("█");
+                                powerBar.append(ChatColor.GRAY).append("▒");
                             }
                         }
 
