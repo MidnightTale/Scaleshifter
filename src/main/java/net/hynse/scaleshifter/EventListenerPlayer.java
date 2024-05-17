@@ -38,7 +38,7 @@ public class EventListenerPlayer implements Listener {
             Scaleshifter.gui.openGUI(player);
         }
     }
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Material blockType = player.getLocation().getBlock().getType();
@@ -54,7 +54,7 @@ public class EventListenerPlayer implements Listener {
 //            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(newSpeed);
         }
     }
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         Entity targetEntity = event.getRightClicked();
@@ -83,7 +83,7 @@ public class EventListenerPlayer implements Listener {
 //        },10);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
             Player player = event.getPlayer();
             if ((player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.STICK)) {
