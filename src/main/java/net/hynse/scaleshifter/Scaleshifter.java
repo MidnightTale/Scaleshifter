@@ -2,9 +2,11 @@ package net.hynse.scaleshifter;
 
 import me.nahu.scheduler.wrapper.FoliaWrappedJavaPlugin;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listener, CommandExecutor {
@@ -14,11 +16,14 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
     public static ScaleUtil scaleUtil;
     public PlayerHitbox hitbox;
     public static ScaleOrb scaleOrb;
-    public static MassiveDamageTiny massiveDamageTiny;
+    public static ScheduleTask scheduleTask;
     public static EventListenerPlayer eventListener;
 
     public final HashMap<UUID, Boolean> playerInteractions = new HashMap<>();
 
+    public final Map<UUID, Long> lastInteractTime = new HashMap<>();
+    public final Map<UUID, Boolean> isHoldingRightClick = new HashMap<>();
+    public final Map<UUID, Integer> chargingPlayers = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -29,12 +34,13 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
         scaleUtil = new ScaleUtil();
         hitbox = new PlayerHitbox();
         scaleOrb = new ScaleOrb();
-        massiveDamageTiny = new MassiveDamageTiny();
+        scheduleTask = new ScheduleTask();
 
         register();
         dataManagers.datasetup();
         scaleOrb.item();
-        massiveDamageTiny.ScheduleTask_A();
+        scheduleTask.MassiveDamageTiny();
+//        scheduleTask.startCheckHoldRightClick(eventListener);
     }
 
     @Override
