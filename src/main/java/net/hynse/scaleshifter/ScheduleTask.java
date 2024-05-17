@@ -26,11 +26,12 @@ public class ScheduleTask {
                             for (Player target : getServer().getOnlinePlayers()) {
                                 if (target != null && target.getAttribute(Attribute.GENERIC_SCALE) != null) {
                                     double targetScale = target.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
-                                    if (targetScale == 0.42 && target.getGameMode() != GameMode.SPECTATOR && target.getGameMode() != GameMode.CREATIVE) {
+                                    if (targetScale == 0.42 && target.getGameMode() != GameMode.SPECTATOR && target.getGameMode() != GameMode.CREATIVE && !target.isDead()) {
                                         if (Scaleshifter.instance.hitbox.isInsideCustomHitbox(player, target)) {
                                             FoliaScheduler.getEntityScheduler().runDelayed(target, Scaleshifter.instance, (p) -> {
                                                 target.playEffect(target.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
-                                                target.damage(6, player);
+                                                player.playEffect(target.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
+                                                target.damage(5, player);
                                             }, () -> {
                                             }, 1);
                                         }
