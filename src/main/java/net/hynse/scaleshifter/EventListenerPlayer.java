@@ -3,10 +3,7 @@ package net.hynse.scaleshifter;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import me.nahu.scheduler.wrapper.runnable.WrappedRunnable;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Interaction;
@@ -75,7 +72,7 @@ public class EventListenerPlayer implements Listener {
             }
         }
 //        FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (n) -> {
-            if (player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.STICK) {
+            if (player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.BREEZE_ROD) {
                 if (targetEntity instanceof LivingEntity && event.getRightClicked() != null) {
                     charge(player);
                 }
@@ -86,12 +83,12 @@ public class EventListenerPlayer implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
             Player player = event.getPlayer();
-            if ((player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.STICK)) {
+            if ((player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.BREEZE_ROD)) {
                 charge(player);
             }
     }
 
-    public void charge (Player player) {
+    public void charge(Player player) {
         if (!player.getPassengers().isEmpty()) {
             UUID playerId = player.getUniqueId();
             if (!Scaleshifter.instance.chargingPlayers.containsKey(playerId)) {
@@ -108,9 +105,32 @@ public class EventListenerPlayer implements Listener {
                         int power = Scaleshifter.instance.chargingPlayers.get(playerId);
                         power = Math.min(power + 1, 10);
                         Scaleshifter.instance.chargingPlayers.put(playerId, power);
-                        player.sendActionBar("Power:" + power);
 
-                        if ((!player.isSneaking() || player.getInventory().getItemInMainHand().getType() != Material.STICK)) {
+                        // Build the power bar string with color and placeholder
+                        StringBuilder powerBar = new StringBuilder("Power [");
+                        for (int i = 0; i < 10; i++) {
+                            if (i < power) {
+                                if (i < 5) {
+                                    // Green color for low power
+                                    powerBar.append(ChatColor.GREEN);
+                                } else if (i < 8) {
+                                    // Yellow color for medium power
+                                    powerBar.append(ChatColor.YELLOW);
+                                } else {
+                                    // Red color for high power
+                                    powerBar.append(ChatColor.RED);
+                                }
+                                powerBar.append("█");
+                            } else {
+                                // Gray color for placeholder
+                                powerBar.append(ChatColor.GRAY).append("█");
+                            }
+                        }
+
+                        // Send the power bar to the player's action bar
+                        player.sendActionBar(powerBar.toString() + ChatColor.WHITE + "]");
+
+                        if ((!player.isSneaking() || player.getInventory().getItemInMainHand().getType() != Material.BREEZE_ROD)) {
                             throwPassenger(player, power);
                             Scaleshifter.instance.chargingPlayers.remove(playerId);
                             cancel();
@@ -121,10 +141,10 @@ public class EventListenerPlayer implements Listener {
         }
     }
 
-    public void throwPassenger(Player player, int POWER) {
-        double scaledPower = POWER / 10.0 * 1.6;
-        double scaledPowerUpward = POWER / 10.0 * 0.53;
-        double scaledPowerFeedback = POWER / 10.0 * -0.6;
+    public void throwPassenger(Player player, int power) {
+        double scaledPower = power / 10.0 * 1.6;
+        double scaledPowerUpward = power / 10.0 * 0.53;
+        double scaledPowerFeedback = power / 10.0 * -0.6;
 
         new WrappedRunnable() {
             @Override
@@ -136,7 +156,7 @@ public class EventListenerPlayer implements Listener {
                         velocity.setY(velocity.getY() + scaledPowerUpward);
                         passenger.setVelocity(velocity);
                         player.setVelocity(player.getLocation().getDirection().multiply(scaledPowerFeedback));
-                        player.sendMessage("[LMAO GET THROW] P: " + POWER + " | R: " + scaledPower  + " | F: " + scaledPowerFeedback  + " | U: " + scaledPowerUpward);
+                        //player.sendActionBar("P: " + power);
                     }, null, 3);
                 }
             }
