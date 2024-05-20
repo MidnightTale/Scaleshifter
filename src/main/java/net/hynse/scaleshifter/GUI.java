@@ -69,16 +69,16 @@ public class GUI implements Listener {
 
             double playerScale = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SCALE)).getBaseValue();
 
-            if (playerScale == data[0]) {
-                player.sendMessage(ChatColor.RED + "You are already " + ChatColor.stripColor(meta.getDisplayName()));
-            } else {
+//            if (playerScale == data[0]) {
+//                player.sendMessage(ChatColor.RED + "You are already " + ChatColor.stripColor(meta.getDisplayName()));
+//            } else {
                 player.updateInventory();
                 FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (o) -> {
                 setPlayerStatus(player, data);
                 Scaleshifter.instance.playerInteractions.put(player.getUniqueId(), true);
                 player.closeInventory();
                     }, 2);
-                }
+//                }
         }
     }
 
