@@ -27,11 +27,11 @@ public class GUI implements Listener {
     public Double[] data = null;
 
     static {
-        SCALE_DATA.put("Tiny", new Double[]{0.42, 0.135, 16.0, 4.7, 0.95, 1.36, 0.058, 0.35, -0.16, 2.8, 0.5, 0.97, 4.0, 4.0});
-        SCALE_DATA.put("Small", new Double[]{0.8, 0.12, 18.0, 4.26, 0.97, 1.2, 0.076, 0.37, -0.1, 2.5, 0.55, 0.98, 4.2, 4.2});
+        SCALE_DATA.put("Tiny", new Double[]{0.42, 0.135, 16.0, 4.7, 0.95, 1.36, 0.058, 0.35, -0.16, 2.5, 0.5, 0.97, 4.0, 4.0});
+        SCALE_DATA.put("Small", new Double[]{0.8, 0.12, 18.0, 4.26, 0.97, 1.2, 0.076, 0.37, -0.1, 2.8, 0.55, 0.98, 4.2, 4.2});
         SCALE_DATA.put("Normal", new Double[]{1.0, 0.10000000149011612, 20.0, 4.0, 1.0, 1.0, 0.08, 0.41999998688697815, 0.0, 3.0, 0.6, 1.0, 4.5, 4.5});
-        SCALE_DATA.put("Large", new Double[]{1.32, 0.096, 26.0, 3.75, 1.5, 0.95, 0.085, 0.56, 0.16, 4.5, 0.98, 1.3, 5.0, 5.0});
-        SCALE_DATA.put("Massive", new Double[]{1.6, 0.09265, 32.0, 3.4, 2.0, 0.9, 0.087, 0.59, 0.37, 5.0, 1.5, 1.6, 5.5, 5.5});
+        SCALE_DATA.put("Large", new Double[]{1.28, 0.097, 30.0, 3.8, 1.52, 0.95, 0.085, 0.56, 0.16, 4.5, 0.98, 1.67, 5.2, 5.2});
+        SCALE_DATA.put("Massive", new Double[]{1.52, 0.093, 36.0, 3.6, 1.96, 0.9, 0.087, 0.59, 0.37, 5.0, 1.5, 1.88, 5.7, 5.7});
     }
 
     private static final String GUI_TITLE = "Choose Your Scale";
@@ -140,20 +140,40 @@ public class GUI implements Listener {
             if (scaleMeta != null) {
                 scaleMeta.setDisplayName(ChatColor.GREEN + itemName);
                 List<String> lore = new ArrayList<>();
-                lore.add(ChatColor.GRAY + "Scale: " + entry.getValue()[0]);
-                lore.add(ChatColor.GRAY + "Movement Speed: " + entry.getValue()[1]);
-                lore.add(ChatColor.GRAY + "Max Health: " + entry.getValue()[2]);
-                lore.add(ChatColor.GRAY + "Attack Speed: " + entry.getValue()[3]);
-                lore.add(ChatColor.GRAY + "Attack Damage: " + entry.getValue()[4]);
-                lore.add(ChatColor.GRAY + "Fall Damage Multiple: " + entry.getValue()[5]);
-                lore.add(ChatColor.GRAY + "Gravity: " + entry.getValue()[6]);
-                lore.add(ChatColor.GRAY + "Jump Strength: " + entry.getValue()[7]);
-                lore.add(ChatColor.GRAY + "Knockback Resistance: " + entry.getValue()[8]);
-                lore.add(ChatColor.GRAY + "Safe Fall Distance: " + entry.getValue()[9]);
-                lore.add(ChatColor.GRAY + "Step Height: " + entry.getValue()[10]);
-                lore.add(ChatColor.GRAY + "Block Break Speed: " + entry.getValue()[11]);
-                lore.add(ChatColor.GRAY + "Block Interaction Range: " + entry.getValue()[12]);
-                lore.add(ChatColor.GRAY + "Entity Interaction Range: " + entry.getValue()[13]);
+                double attackSpeed = entry.getValue()[3];
+                double attackDamage = entry.getValue()[4];
+                double attackDamageInHearts = attackDamage * 0.25;
+                lore.add(ChatColor.GRAY + "Height: " + ChatColor.YELLOW + (entry.getValue()[0] * 2.0) + " blocks");
+                lore.add(ChatColor.GRAY + "Width: " + ChatColor.YELLOW + (entry.getValue()[0] * 0.8) + " blocks");
+                lore.add(ChatColor.GRAY + "Max Health: " + ChatColor.YELLOW + (entry.getValue()[2] / 2.0) + " hearts");
+                double walkSpeed = entry.getValue()[1] * 43.172; // Walk speed calculation
+                double sprintSpeed = entry.getValue()[1] * 56.123; // Sprint speed calculation
+                lore.add(ChatColor.GRAY + "Walk Speed: " + ChatColor.YELLOW + String.format("%.2f", walkSpeed) + " m/s (Base)");
+                lore.add(ChatColor.GRAY + "Run Speed: " + ChatColor.YELLOW + String.format("%.2f", sprintSpeed) + " m/s (Sprint)");
+                lore.add(ChatColor.GRAY + "Fall Damage Multiple: " +  ChatColor.YELLOW + entry.getValue()[5]);
+                lore.add(ChatColor.GRAY + "Step Height: " +  ChatColor.YELLOW + entry.getValue()[10]);
+                lore.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.YELLOW + String.format("%.2f", attackSpeed) + " attacks/s");
+                lore.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.YELLOW + String.format("%.2f", attackDamageInHearts) + " hearts");
+                lore.add(ChatColor.GRAY + "Knockback Resistance: " +  ChatColor.YELLOW + entry.getValue()[8]);
+                lore.add(ChatColor.GRAY + "Gravity: " +  ChatColor.YELLOW + entry.getValue()[6]);
+                lore.add(ChatColor.GRAY + "Interaction: " +  ChatColor.YELLOW + (entry.getValue()[12]) + " blocks");
+
+
+
+//                lore.add(ChatColor.GRAY + "Scale: " + entry.getValue()[0]);
+//                lore.add(ChatColor.GRAY + "Movement Speed: " + entry.getValue()[1]);
+//                lore.add(ChatColor.GRAY + "Max Health: " + entry.getValue()[2]);
+//                lore.add(ChatColor.GRAY + "Attack Speed: " + entry.getValue()[3]);
+//                lore.add(ChatColor.GRAY + "Attack Damage: " + entry.getValue()[4]);
+//                lore.add(ChatColor.GRAY + "Fall Damage Multiple: " + entry.getValue()[5]);
+//                lore.add(ChatColor.GRAY + "Gravity: " + entry.getValue()[6]);
+//                lore.add(ChatColor.GRAY + "Jump Strength: " + entry.getValue()[7]);
+//                lore.add(ChatColor.GRAY + "Knockback Resistance: " + entry.getValue()[8]);
+//                lore.add(ChatColor.GRAY + "Safe Fall Distance: " + entry.getValue()[9]);
+//                lore.add(ChatColor.GRAY + "Step Height: " + entry.getValue()[10]);
+//                lore.add(ChatColor.GRAY + "Block Break Speed: " + entry.getValue()[11]);
+//                lore.add(ChatColor.GRAY + "Block Interaction Range: " + entry.getValue()[12]);
+//                lore.add(ChatColor.GRAY + "Entity Interaction Range: " + entry.getValue()[13]);
 
                 scaleMeta.setLore(lore);
 
