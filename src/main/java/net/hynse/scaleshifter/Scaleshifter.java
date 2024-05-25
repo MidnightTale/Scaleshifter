@@ -14,16 +14,16 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
     public DataManagers dataManagers;
     public static GUI gui;
     public static ScaleUtil scaleUtil;
-    public PlayerHitbox hitbox;
+//    public PlayerHitbox hitbox;
     public static ScaleOrb scaleOrb;
-    public static ScheduleTask scheduleTask;
+//    public static ScheduleTask scheduleTask;
     public static EventListenerPlayer eventListener;
 
     public final HashMap<UUID, Boolean> playerInteractions = new HashMap<>();
 
-    public final Map<UUID, Long> lastInteractTime = new HashMap<>();
-    public final Map<UUID, Boolean> isHoldingRightClick = new HashMap<>();
-    public final Map<UUID, Integer> chargingPlayers = new HashMap<>();
+//    public final Map<UUID, Long> lastInteractTime = new HashMap<>();
+//    public final Map<UUID, Boolean> isHoldingRightClick = new HashMap<>();
+//    public final Map<UUID, Integer> chargingPlayers = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -32,14 +32,14 @@ public final class Scaleshifter extends FoliaWrappedJavaPlugin implements Listen
         eventListener = new EventListenerPlayer();
         gui = new GUI();
         scaleUtil = new ScaleUtil();
-        hitbox = new PlayerHitbox();
+//        hitbox = new PlayerHitbox();
         scaleOrb = new ScaleOrb();
-        scheduleTask = new ScheduleTask();
+//        scheduleTask = new ScheduleTask();
 
         register();
         dataManagers.datasetup();
         scaleOrb.item();
-        scheduleTask.MassiveDamageTiny();
+//        scheduleTask.MassiveDamageTiny();
 //        scheduleTask.startCheckHoldRightClick(eventListener);
     }
 
