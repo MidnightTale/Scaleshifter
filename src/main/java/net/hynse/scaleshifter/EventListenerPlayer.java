@@ -35,42 +35,42 @@ public class EventListenerPlayer implements Listener {
             Scaleshifter.gui.openGUI(player);
         }
     }
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Material blockType = player.getLocation().getBlock().getType();
-        double scale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
-        if (blockType == Material.COBWEB && scale <= 0.8) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 6, 4, false, false));
-//            double newSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + 0.13;
-//            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(newSpeed);
-        }
-        if (blockType == Material.COBWEB && scale <= 0.42) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 3, 10, false, false));
-//            double newSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + 0.16;
-//            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(newSpeed);
-        }
-    }
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        Player player = event.getPlayer();
-        Entity targetEntity = event.getRightClicked();
-
-        if (player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.AIR && player.getPassengers().isEmpty()) {
-            if (targetEntity instanceof LivingEntity && event.getRightClicked() != null) {
-                LivingEntity target = (LivingEntity) targetEntity;
-                LivingEntity host = (LivingEntity) event.getPlayer();
-
-                double targetScale = target.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
-                double hostScale = host.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
-
-                if (targetScale <= 1.0 && hostScale == 1.6) {
-                    if (player.getGameMode() != GameMode.SPECTATOR && target.getType().isAlive()) {
-                        player.addPassenger(target);
-                    }
-                }
-            }
-        }
+//    @EventHandler(priority = EventPriority.LOWEST)
+//    public void onPlayerMove(PlayerMoveEvent event) {
+//        Player player = event.getPlayer();
+//        Material blockType = player.getLocation().getBlock().getType();
+//        double scale = player.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
+//        if (blockType == Material.COBWEB && scale <= 0.8) {
+//            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 6, 4, false, false));
+////            double newSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + 0.13;
+////            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(newSpeed);
+//        }
+//        if (blockType == Material.COBWEB && scale <= 0.42) {
+//            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 3, 10, false, false));
+////            double newSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + 0.16;
+////            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(newSpeed);
+//        }
+//    }
+//    @EventHandler(priority = EventPriority.LOWEST)
+//    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+//        Player player = event.getPlayer();
+//        Entity targetEntity = event.getRightClicked();
+//
+//        if (player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.AIR && player.getPassengers().isEmpty()) {
+//            if (targetEntity instanceof LivingEntity && event.getRightClicked() != null) {
+//                LivingEntity target = (LivingEntity) targetEntity;
+//                LivingEntity host = (LivingEntity) event.getPlayer();
+//
+//                double targetScale = target.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
+//                double hostScale = host.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
+//
+//                if (targetScale <= 1.0 && hostScale == 1.6) {
+//                    if (player.getGameMode() != GameMode.SPECTATOR && target.getType().isAlive()) {
+//                        player.addPassenger(target);
+//                    }
+//                }
+//            }
+//        }
 //        FoliaScheduler.getGlobalRegionScheduler().runDelayed(Scaleshifter.instance, (n) -> {
 //            if (player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.BREEZE_ROD) {
 //                if (targetEntity instanceof LivingEntity && event.getRightClicked() != null) {
@@ -78,7 +78,7 @@ public class EventListenerPlayer implements Listener {
 //                }
 //            }
 //        },10);
-    }
+    //}
 
 //    @EventHandler(priority = EventPriority.LOWEST)
 //    public void onPlayerInteract(PlayerInteractEvent event) {
